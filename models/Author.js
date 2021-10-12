@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const ItemSchema = new mongoose.Schema({
+const AuthorSchema = new mongoose.Schema({
   first_name: {
     type: String,
     trim: true,
@@ -36,4 +36,4 @@ const ItemSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Item", ItemSchema);
+module.exports = mongoose.model("Author", AuthorSchema);

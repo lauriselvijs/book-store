@@ -1,4 +1,5 @@
-const axios = require("axios");
+const Author = require("../../models/Author");
+const Book = require("../../models/Book");
 
 const {
   GraphQLObjectType,
@@ -39,8 +40,9 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     authors: {
       type: new GraphQLList(AuthorType),
-      resolve(parent, args) {
+      async resolve(parent, args) {
         // Return authors
+        const authors = await Author.find();
       },
     },
     author: {
@@ -48,8 +50,9 @@ const RootQuery = new GraphQLObjectType({
       args: {
         author_id: { type: GraphQLString },
       },
-      resolve(parent, args) {
+      async resolve(parent, args) {
         // Return author by its id
+        const author = await Author.findById(args.author_id);
       },
     },
     book: {
@@ -57,8 +60,9 @@ const RootQuery = new GraphQLObjectType({
       args: {
         ISBN: { type: GraphQLString },
       },
-      resolve(parent, args) {
+      async resolve(parent, args) {
         // Return book by its ISBN
+        const book = await Book.findOne({ ISBN: args.ISBN });
       },
     },
   },
@@ -67,8 +71,10 @@ const RootQuery = new GraphQLObjectType({
     args: {
       author_id: { type: GraphQLString },
     },
-    resolve(parent, args) {
+    async resolve(parent, args) {
       // Return all books by author id
+      const author = await Author.findById(args.author_id);
+      const books = await Book.find({ author_id: args.author_id });
     },
   },
 });

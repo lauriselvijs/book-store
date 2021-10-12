@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const ItemSchema = new mongoose.Schema({
+const BookSchema = new mongoose.Schema({
   ISBN: {
     type: String,
     trim: true,
@@ -38,4 +38,4 @@ const ItemSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Item", ItemSchema);
+module.exports = mongoose.model("Book", BookSchema);
