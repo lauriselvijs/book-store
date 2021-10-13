@@ -1,30 +1,28 @@
 import { useQuery, gql } from "@apollo/client";
 import Loader from "./loaders/loader";
 import "../styles/loaders/loader.css";
-import AuthorBookList from "./AuthorBookList";
+import AuthorBook from "./AuthorBook";
+import { Link } from "react-router-dom";
 
-const AUTHOR_BOOK_QUERY = gql`
-  query CountryNameTranslQuery($ISBN: String!) {
-    books(ISBN: $ISBN) {
-      book {
-        ISBN
-        author_id
-        title
-        year
-        category
-        description
-        page_count
-        book_cover
-      }
+const AUTHOR_BOOKS_QUERY = gql`
+  query AuthorBooksQuery($_id: String!) {
+    books(author_id: $_id) {
+      ISBN_10
+      author_id
+      title
+      year
+      page_count
+      book_cover
     }
   }
 `;
 
+// adding prop check for match and params
 const AuthorBooks = ({ match: { params } }) => {
-  let { ISBN } = params;
+  let { _id } = params;
 
-  const { loading, error, data } = useQuery(AUTHOR_BOOK_QUERY, {
-    variables: { ISBN },
+  const { loading, error, data } = useQuery(AUTHOR_BOOKS_QUERY, {
+    variables: { _id },
   });
 
   if (loading)
@@ -44,9 +42,17 @@ const AuthorBooks = ({ match: { params } }) => {
 
   return (
     <>
-      {data.books.map((book) => (
-        <AuthorBookList key={data.books.book.ISBN} book={book} />
+      {data.books.map((book, index) => (
+        <AuthorBook key={index} book={book} />
       ))}
+      <div className="m-2 d-flex justify-content-end">
+        <Link to={`/add_author_book/${_id}`} className="btn btn-success m-2">
+          Add new book
+        </Link>
+        <Link to={`/`} className="btn btn-danger m-2">
+          Back
+        </Link>
+      </div>
     </>
   );
 };

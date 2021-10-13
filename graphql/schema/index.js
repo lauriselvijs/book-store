@@ -13,9 +13,8 @@ const {
 const AuthorType = new GraphQLObjectType({
   name: "Author",
   fields: () => ({
-    author_id: { type: GraphQLString },
-    first_name: { type: GraphQLString },
-    last_name: { type: GraphQLString },
+    _id: { type: GraphQLString },
+    name: { type: GraphQLString },
     birth_year: { type: GraphQLString },
     author_pic: { type: GraphQLString },
   }),
@@ -25,7 +24,7 @@ const AuthorType = new GraphQLObjectType({
 const BookType = new GraphQLObjectType({
   name: "Book",
   fields: () => ({
-    ISBN: { type: GraphQLString },
+    ISBN_10: { type: GraphQLString },
     author_id: { type: GraphQLString },
     title: { type: GraphQLString },
     year: { type: GraphQLString },
@@ -41,40 +40,43 @@ const RootQuery = new GraphQLObjectType({
     authors: {
       type: new GraphQLList(AuthorType),
       async resolve(parent, args) {
-        // Return authors
+        // Return all authors
         const authors = await Author.find();
+        return authors;
       },
     },
     author: {
       type: AuthorType,
       args: {
-        author_id: { type: GraphQLString },
+        _id: { type: GraphQLString },
       },
       async resolve(parent, args) {
         // Return author by its id
+        const author = await Author.findById(args._id);
+        return author;
+      },
+    },
+    books: {
+      type: new GraphQLList(BookType),
+      args: {
+        author_id: { type: GraphQLString },
+      },
+      async resolve(parent, args) {
+        // Return all books by author id
         const author = await Author.findById(args.author_id);
+        const books = await Book.find({ author_id: author._id });
+        return books;
       },
     },
     book: {
       type: BookType,
       args: {
-        ISBN: { type: GraphQLString },
+        ISBN_10: { type: GraphQLString },
       },
       async resolve(parent, args) {
-        // Return book by its ISBN
-        const book = await Book.findOne({ ISBN: args.ISBN });
+        const book = await Book.findOne({ ISBN_10: args.ISBN_10 });
+        return book;
       },
-    },
-  },
-  books: {
-    type: BookType,
-    args: {
-      author_id: { type: GraphQLString },
-    },
-    async resolve(parent, args) {
-      // Return all books by author id
-      const author = await Author.findById(args.author_id);
-      const books = await Book.find({ author_id: args.author_id });
     },
   },
 });

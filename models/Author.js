@@ -1,15 +1,10 @@
 const mongoose = require("mongoose");
 
 const AuthorSchema = new mongoose.Schema({
-  first_name: {
+  name: {
     type: String,
     trim: true,
-    required: [true, "Please enter first name"],
-  },
-  last_name: {
-    type: String,
-    trim: true,
-    required: [true, "Please enter last name"],
+    required: [true, "Please enter name"],
   },
   birth_year: {
     type: String,

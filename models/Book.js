@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const BookSchema = new mongoose.Schema({
-  ISBN: {
+  ISBN_10: {
     type: String,
     trim: true,
     required: [true, "Please enter ISBN"],
