@@ -32,7 +32,7 @@ const Authors = () => {
     );
   if (error)
     return (
-      <p class="alert alert-danger m-2" role="alert">
+      <p className="alert alert-danger m-2" role="alert">
         Error :(
       </p>
     );

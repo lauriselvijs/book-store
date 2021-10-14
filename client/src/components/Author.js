@@ -1,8 +1,32 @@
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Moment from "react-moment";
+import { useMutation, gql } from "@apollo/client";
 
-const Author = ({ author: { _id, name, birth_year, author_pic } }) => {
+const DELETE_AUTHOR_QUERY = gql`
+  mutation DeleteAuthorQuery($author_id: String!) {
+    deleteAuthor(_id: $author_id) {
+      ISBN_10
+      author_id
+      title
+      year
+      page_count
+      book_cover
+    }
+  }
+`;
+
+const Author = ({
+  author: { _id: author_id, name, birth_year, author_pic },
+}) => {
+  const [deleteNewAuthor] = useMutation(DELETE_AUTHOR_QUERY);
+
+  const onDeleteBtnCLick = () => {
+    deleteNewAuthor({
+      variables: { _id: author_id },
+    });
+  };
+
   return (
     <div className="card card-body mb-3">
       <div className="row">
@@ -11,8 +35,14 @@ const Author = ({ author: { _id, name, birth_year, author_pic } }) => {
           <p>
             Birth year: <Moment format="DD MMMM, YYYY">{birth_year}</Moment>
           </p>
-          <Link to={`/books/${_id}`} className="btn btn-secondary">
+          <Link to={`/books/${author_id}`} className="btn btn-secondary m-2">
             Author Books
+          </Link>
+          <Link
+            to={`/edit_author/${author_id}`}
+            className="btn btn-secondary m-2"
+          >
+            Edit Author
           </Link>
         </div>
         <div className="col-lg-3 mt-2 d-flex justify-content-center">
@@ -28,6 +58,9 @@ const Author = ({ author: { _id, name, birth_year, author_pic } }) => {
           />
         </div>
       </div>
+      <button onClick={onDeleteBtnCLick} className="btn btn-secondary mt-2">
+        Delete
+      </button>
     </div>
   );
 };

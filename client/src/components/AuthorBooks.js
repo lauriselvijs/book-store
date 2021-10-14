@@ -5,8 +5,8 @@ import AuthorBook from "./AuthorBook";
 import { Link } from "react-router-dom";
 
 const AUTHOR_BOOKS_QUERY = gql`
-  query AuthorBooksQuery($_id: String!) {
-    books(author_id: $_id) {
+  query AuthorBooksQuery($author_id: String!) {
+    authorBooks(author_id: $author_id) {
       ISBN_10
       author_id
       title
@@ -19,10 +19,10 @@ const AUTHOR_BOOKS_QUERY = gql`
 
 // adding prop check for match and params
 const AuthorBooks = ({ match: { params } }) => {
-  let { _id } = params;
+  let { author_id } = params;
 
   const { loading, error, data } = useQuery(AUTHOR_BOOKS_QUERY, {
-    variables: { _id },
+    variables: { author_id },
   });
 
   if (loading)
@@ -35,18 +35,21 @@ const AuthorBooks = ({ match: { params } }) => {
     );
   if (error)
     return (
-      <p class="alert alert-danger m-2" role="alert">
+      <p className="alert alert-danger m-2" role="alert">
         Error :(
       </p>
     );
 
   return (
     <>
-      {data.books.map((book, index) => (
+      {data.authorBooks.map((book, index) => (
         <AuthorBook key={index} book={book} />
       ))}
       <div className="m-2 d-flex justify-content-end">
-        <Link to={`/add_author_book/${_id}`} className="btn btn-success m-2">
+        <Link
+          to={`/add_author_book/${author_id}`}
+          className="btn btn-success m-2"
+        >
           Add new book
         </Link>
         <Link to={`/`} className="btn btn-danger m-2">

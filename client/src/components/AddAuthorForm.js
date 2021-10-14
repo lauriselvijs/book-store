@@ -3,8 +3,18 @@ import { Link } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 
 const ADD_NEW_AUTHOR_QUERY = gql`
-  mutation ($name: String!, $birth_year: String!, $author_pic: String!) {
-    addAuthor(name: $name, birth_year: $birth_year, author_pic: $author_pic) {
+  mutation (
+    $author_id: String!
+    $name: String!
+    $birth_year: String!
+    $author_pic: String!
+  ) {
+    editAuthor(
+      _id: $author_id
+      name: $name
+      birth_year: $birth_year
+      author_pic: $author_pic
+    ) {
       name
       birth_year
       author_pic
@@ -12,7 +22,7 @@ const ADD_NEW_AUTHOR_QUERY = gql`
   }
 `;
 
-const NewAuthorForm = () => {
+const AddAuthorForm = () => {
   const [addNewAuthor] = useMutation(ADD_NEW_AUTHOR_QUERY);
 
   const [name, setName] = useState("");
@@ -122,4 +132,4 @@ const NewAuthorForm = () => {
   );
 };
 
-export default NewAuthorForm;
+export default AddAuthorForm;
