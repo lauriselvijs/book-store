@@ -2,7 +2,12 @@ const Author = require("../../models/Author");
 const Book = require("../../models/Book");
 const { AuthorType } = require("./authorType");
 const { BookType } = require("./bookType");
-const { GraphQLObjectType, GraphQLString, GraphQLNonNull } = require("graphql");
+const {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLInt,
+} = require("graphql");
 
 // Mutation
 const mutation = new GraphQLObjectType({
@@ -67,8 +72,8 @@ const mutation = new GraphQLObjectType({
         ISBN_10: { type: new GraphQLNonNull(GraphQLString) },
         author_id: { type: new GraphQLNonNull(GraphQLString) },
         title: { type: new GraphQLNonNull(GraphQLString) },
-        year: { type: new GraphQLNonNull(GraphQLString) },
-        page_count: { type: new GraphQLNonNull(GraphQLString) },
+        year: { type: new GraphQLNonNull(GraphQLInt) },
+        page_count: { type: new GraphQLNonNull(GraphQLInt) },
         book_cover: { type: new GraphQLNonNull(GraphQLString) },
       },
       async resolve(parent, args) {
@@ -105,28 +110,20 @@ const mutation = new GraphQLObjectType({
     editBook: {
       type: BookType,
       args: {
-        ISBN_10: { type: GraphQLString },
-        author_id: { type: GraphQLString },
+        ISBN_10: { type: new GraphQLNonNull(GraphQLString) },
         title: { type: GraphQLString },
-        year: { type: GraphQLString },
-        page_count: { type: GraphQLString },
+        year: { type: GraphQLInt },
+        page_count: { type: GraphQLInt },
         book_cover: { type: GraphQLString },
       },
       async resolve(parent, args) {
-        const author = await Author.findById(args.author_id);
-
-        if (!author) {
-          throw "No author ID provided";
-        }
-
         const book = await Book.findOneAndUpdate(
           {
             ISBN_10: args.ISBN_10,
           },
           {
-            author_id: args.name,
-            title: args.birth_year,
-            year: args.author_pic,
+            title: args.title,
+            year: args.year,
             page_count: args.page_count,
             book_cover: args.book_cover,
           },

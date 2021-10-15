@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 
 const AuthorBook = ({
   book: { title, year, ISBN_10, page_count, book_cover },
+  onDelete,
+  onEdit,
 }) => {
   return (
     <div className="card card-body mb-3 ">
@@ -11,6 +13,9 @@ const AuthorBook = ({
           <p>Year: {year}</p>
           <p>ISBN 10: {ISBN_10}</p>
           <p>Page count: {page_count}</p>
+          <button onClick={() => onEdit()} className="btn btn-secondary m-2">
+            Edit Book information
+          </button>
         </div>
         <div className="col-lg-3 mt-2 d-flex justify-content-center">
           <img
@@ -25,6 +30,9 @@ const AuthorBook = ({
           />
         </div>
       </div>
+      <button onClick={() => onDelete()} className="btn btn-secondary mt-2">
+        Delete
+      </button>
     </div>
   );
 };

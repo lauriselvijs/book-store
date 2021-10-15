@@ -1,4 +1,4 @@
-const { GraphQLObjectType, GraphQLString } = require("graphql");
+const { GraphQLObjectType, GraphQLString, GraphQLInt } = require("graphql");
 
 // Book type
 const BookType = new GraphQLObjectType({
@@ -7,8 +7,8 @@ const BookType = new GraphQLObjectType({
     ISBN_10: { type: GraphQLString },
     author_id: { type: GraphQLString },
     title: { type: GraphQLString },
-    year: { type: GraphQLString },
-    page_count: { type: GraphQLString },
+    year: { type: GraphQLInt },
+    page_count: { type: GraphQLInt },
     book_cover: { type: GraphQLString },
   }),
 });

@@ -17,10 +17,10 @@ const BookSchema = new mongoose.Schema({
     required: [true, "Please enter book title"],
   },
   year: {
-    type: String,
+    type: Number,
     required: [true, "Please enter book publishing year"],
   },
-  page_count: {
+  page_count: { 
     type: Number,
     required: [true, "Please enter book page count"],
   },

@@ -1,8 +1,18 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
+import PropTypes from "prop-types";
 
 const ADD_NEW_AUTHOR_QUERY = gql`
+  mutation ($name: String!, $birth_year: String!, $author_pic: String!) {
+    addAuthor(name: $name, birth_year: $birth_year, author_pic: $author_pic) {
+      name
+      birth_year
+      author_pic
+    }
+  }
+`;
+
+const EDIT_AUTHOR_QUERY = gql`
   mutation (
     $author_id: String!
     $name: String!
@@ -22,28 +32,50 @@ const ADD_NEW_AUTHOR_QUERY = gql`
   }
 `;
 
-const AddAuthorForm = () => {
+const AddAuthorForm = ({
+  onBackBtnClick,
+  authorInfo: { _id: author_id, name, birth_year, author_pic },
+  editForm,
+}) => {
   const [addNewAuthor] = useMutation(ADD_NEW_AUTHOR_QUERY);
+  const [editAuthor] = useMutation(EDIT_AUTHOR_QUERY);
 
-  const [name, setName] = useState("");
-  const [birthYear, setBirthYear] = useState("");
-  const [authorPicture, setAuthorPicture] = useState("");
+  const [authorName, setAuthorName] = useState(name);
+  const [birthYear, setBirthYear] = useState(birth_year);
+  const [authorPicture, setAuthorPicture] = useState(author_pic);
   const [showError, setShowError] = useState(false);
+  const [showInfoMsg, setShowInfoMsg] = useState(false);
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (name && birthYear && authorPicture) {
+    if (authorName && birthYear && authorPicture && !editForm) {
       setShowError(false);
       addNewAuthor({
-        variables: { name, birth_year: birthYear, author_pic: authorPicture },
+        variables: {
+          name: authorName,
+          birth_year: birthYear,
+          author_pic: authorPicture,
+        },
       });
-      setName("");
-      // Reset birth year
+      setAuthorName("");
       setBirthYear("");
       setAuthorPicture("");
+      setShowInfoMsg(true);
+    } else if (editForm) {
+      setShowError(false);
+      editAuthor({
+        variables: {
+          author_id,
+          name: authorName,
+          birth_year: birthYear,
+          author_pic: authorPicture,
+        },
+      });
+      setShowInfoMsg(true);
     } else {
       setShowError(true);
+      setShowInfoMsg(false);
     }
   };
 
@@ -62,8 +94,8 @@ const AddAuthorForm = () => {
                 id="authorName"
                 aria-describedby="authorName"
                 placeholder="Enter author name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={authorName}
+                onChange={(e) => setAuthorName(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -71,6 +103,7 @@ const AddAuthorForm = () => {
                 Birth year
               </label>
               <input
+                value={birthYear}
                 type="date"
                 className="form-control"
                 id="birthYear"
@@ -113,6 +146,21 @@ const AddAuthorForm = () => {
             ></button>
           </div>
         )}
+
+        {showInfoMsg && (
+          <div
+            className="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            Saved!
+            <button
+              type="button"
+              className="close"
+              data-dismiss="alert"
+              aria-describedby="Close"
+            ></button>
+          </div>
+        )}
       </div>
       <div className="d-flex justify-content-center justify-content-lg-end">
         <button
@@ -122,14 +170,29 @@ const AddAuthorForm = () => {
         >
           Save
         </button>
-        <button className="btn btn-danger m-2">
-          <Link style={{ textDecoration: "none", color: "white" }} to={`/`}>
-            Back
-          </Link>
+        <button onClick={() => onBackBtnClick()} className="btn btn-danger m-2">
+          Back
         </button>
       </div>
     </>
   );
+};
+
+AddAuthorForm.propTypes = {
+  editForm: PropTypes.bool,
+  onBackBtnClick: PropTypes.func,
+  authorInfo: PropTypes.shape({
+    name: PropTypes.string,
+    author_id: PropTypes.string,
+    birth_year: PropTypes.string,
+    author_pic: PropTypes.string,
+  }),
+};
+
+AddAuthorForm.defaultProps = {
+  editForm: false,
+  onBackBtnClick: () => {},
+  authorInfo: { author_id: "", name: "", birth_year: "", author_pic: "" },
 };
 
 export default AddAuthorForm;

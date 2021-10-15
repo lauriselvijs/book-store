@@ -1,49 +1,31 @@
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Moment from "react-moment";
-import { useMutation, gql } from "@apollo/client";
-
-const DELETE_AUTHOR_QUERY = gql`
-  mutation DeleteAuthorQuery($author_id: String!) {
-    deleteAuthor(_id: $author_id) {
-      ISBN_10
-      author_id
-      title
-      year
-      page_count
-      book_cover
-    }
-  }
-`;
 
 const Author = ({
   author: { _id: author_id, name, birth_year, author_pic },
+  onDelete,
+  onEdit,
 }) => {
-  const [deleteNewAuthor] = useMutation(DELETE_AUTHOR_QUERY);
-
-  const onDeleteBtnCLick = () => {
-    deleteNewAuthor({
-      variables: { _id: author_id },
-    });
-  };
-
   return (
-    <div className="card card-body mb-3">
+    <>
       <div className="row">
         <div className="col-lg-6">
           <h4>{name}</h4>
           <p>
-            Birth year: <Moment format="DD MMMM, YYYY">{birth_year}</Moment>
+            Birth year: <Moment format="MMM Do, YYYY">{birth_year}</Moment>
           </p>
-          <Link to={`/books/${author_id}`} className="btn btn-secondary m-2">
-            Author Books
-          </Link>
-          <Link
-            to={`/edit_author/${author_id}`}
-            className="btn btn-secondary m-2"
-          >
+          <button className="btn btn-secondary m-2">
+            <Link
+              style={{ textDecoration: "none", color: "white" }}
+              to={`/books/${author_id}`}
+            >
+              Author Books
+            </Link>
+          </button>
+          <button onClick={() => onEdit()} className="btn btn-secondary m-2">
             Edit Author
-          </Link>
+          </button>
         </div>
         <div className="col-lg-3 mt-2 d-flex justify-content-center">
           <img
@@ -58,14 +40,15 @@ const Author = ({
           />
         </div>
       </div>
-      <button onClick={onDeleteBtnCLick} className="btn btn-secondary mt-2">
+      <button onClick={() => onDelete()} className="btn btn-secondary mt-2">
         Delete
       </button>
-    </div>
+    </>
   );
 };
 
 Author.propTypes = {
+  onDelete: PropTypes.func,
   author: PropTypes.object,
   _id: PropTypes.string,
   name: PropTypes.string,
@@ -74,6 +57,7 @@ Author.propTypes = {
 };
 
 Author.defaultProps = {
+  onDelete: () => {},
   author: {},
   _id: "Author ID",
   name: "Author name",
