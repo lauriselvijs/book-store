@@ -32,7 +32,6 @@ const ADD_NEW_BOOK_QUERY = gql`
 const EDIT_BOOK_QUERY = gql`
   mutation (
     $ISBN_10: String!
-    $author_id: String!
     $title: String!
     $year: Int!
     $page_count: Int!
@@ -40,14 +39,12 @@ const EDIT_BOOK_QUERY = gql`
   ) {
     editBook(
       ISBN_10: $ISBN_10
-      author_id: $author_id
       title: $title
       year: $year
       page_count: $page_count
       book_cover: $book_cover
     ) {
       ISBN_10
-      author_id
       title
       year
       page_count
@@ -61,7 +58,6 @@ const NewBookForm = ({
   editForm,
   onBackBtnClick,
 }) => {
-  console.log(editForm);
   const [addNewBook] = useMutation(ADD_NEW_BOOK_QUERY);
   const [editBook] = useMutation(EDIT_BOOK_QUERY);
 
@@ -105,7 +101,6 @@ const NewBookForm = ({
       setShowError(false);
       editBook({
         variables: {
-          author_id,
           ISBN_10,
           title: bookTitle,
           year: parseInt(bookYear),
