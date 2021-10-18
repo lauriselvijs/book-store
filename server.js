@@ -23,44 +23,6 @@ app.use(
   })
 );
 
-app.get("/", async function (req, res) {
-  try {
-    const authors = await Author.find({});
-    res.status(200).json(authors);
-    //console.log(authors);
-  } catch (e) {
-    res.status(404).json(e);
-    console.log(e);
-  }
-
-  /*
-  Author.find({}).then(function (authors, err) {
-    if (authors) {
-      console.log(authors);
-    } else if (!authors) {
-      console.log("no authors found");
-    } else {
-      console.log(err);
-    }
-  });
-*/
-
-  /*
-  Author.find({}, function (err, authors) {
-    if (authors) {
-      console.log(authors);
-    } else if (!authors) {
-      console.log("nothing found");
-    } else {
-      console.log(err);
-    }
-  });
-  */
-});
-
-//const authors = Author.find({});
-//console.log(authors);
-
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 
