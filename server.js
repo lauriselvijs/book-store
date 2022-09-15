@@ -7,7 +7,7 @@ const path = require("path");
 const Author = require("./models/Author");
 
 const dotenv = require("dotenv");
-dotenv.config({ path: "./config/config.env" });
+dotenv.config({ path: "./config/.env" });
 
 const connectDB = require("./config/db");
 
