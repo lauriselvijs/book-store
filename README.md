@@ -7,7 +7,7 @@ App allows CRUD operations with authors and books using GraphQL back-end and Apo
 1. Have node JS installed.
 2. In the project root directory, run <code>npm install</code>
 3. Next run <code>npm run install-client</code>
-4. Create config file .env in the project root directory and set NODE_ENV and MONGO_URI
+4. Create env file .env in config folder and set NODE_ENV and MONGO_URI
 
 <h4>Steps to Run:</h4>
 
